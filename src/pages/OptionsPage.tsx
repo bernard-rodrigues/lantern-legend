@@ -7,10 +7,10 @@ const difficulties = ['Easy', 'Normal', 'Hard']
 const lanternColors = ['White', 'Yellow', 'Baby Red', 'Baby Blue', 'Baby Green']
 
 export function OptionPage(){
-    const [musicVolume, setMusicVolume] = useState(3)
-    const [effectsVolume, setEffectsVolume] = useState(3)
-    const [difficulty, setDifficulty] = useState(difficulties.indexOf('Normal'))
-    const [lanternColor, setLanternColor] = useState(lanternColors.indexOf('White'))
+    const [musicVolume, setMusicVolume] = useState(3);
+    const [effectsVolume, setEffectsVolume] = useState(3);
+    const [difficulty, setDifficulty] = useState(difficulties.indexOf('Normal'));
+    const [lanternColor, setLanternColor] = useState(lanternColors.indexOf('White'));
 
     const navigate = useNavigate()
     
