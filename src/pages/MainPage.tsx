@@ -8,7 +8,7 @@ export function MainPage(){
                 <MainTitle />
             </div>
             <div className="w-full h-1/2 flex flex-col items-center justify-center">
-                <OptionButton title="Start" navigatesTo="/start"/>
+                <OptionButton title="Start" navigatesTo="/info"/>
                 <OptionButton title="Options" navigatesTo="/options"/>
                 <OptionButton title="Credits" navigatesTo="/"/>
             </div>
