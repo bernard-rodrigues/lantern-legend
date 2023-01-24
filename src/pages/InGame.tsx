@@ -88,7 +88,10 @@ export function InGame(){
     }
 
     function moveCharacter(){
-        if(
+        if(controlling.Space){
+            setMoving(false)
+            setTimeout(setMoving, 3000)
+        }else if(
             (controlling.KeyA || controlling.ArrowLeft) && 
             (controlling.KeyW || controlling.ArrowUp) && 
             heroPosition.x > 0 &&

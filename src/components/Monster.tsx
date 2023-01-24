@@ -1,3 +1,5 @@
+import monster from '../assets/monster.png'
+
 interface MonsterProps{
     position: {
         x: number,
@@ -9,7 +11,7 @@ interface MonsterProps{
 export function Monster(props: MonsterProps){
     return(
         <div 
-            className="absolute bg-red-400" 
+            className="absolute" 
             style={
                 {
                     height: props.size,
@@ -18,6 +20,8 @@ export function Monster(props: MonsterProps){
                     top: props.position.y
                 }
             }    
-        />
+        >
+            <img src={monster} alt="" />
+        </div>
     )
 }
