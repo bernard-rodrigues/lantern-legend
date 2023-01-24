@@ -1,5 +1,23 @@
-export function Monster(){
+interface MonsterProps{
+    position: {
+        x: number,
+        y: number
+    }
+    size: number
+}
+
+export function Monster(props: MonsterProps){
     return(
-        <div className="absolute h-12 w-12 bg-red-400 right-0 bottom-0" />
+        <div 
+            className="absolute bg-red-400" 
+            style={
+                {
+                    height: props.size,
+                    width: props.size,
+                    left: props.position.x,
+                    top: props.position.y
+                }
+            }    
+        />
     )
 }
