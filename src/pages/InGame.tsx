@@ -232,7 +232,7 @@ export function InGame(){
 
     useEffect(() => {
         setInterval(() => {
-            setGameTime(currentTime => currentTime == 0 ? 1 : 0)
+            setGameTime(currentTime => currentTime + 1)
         }, 1)
     }, [])
 
