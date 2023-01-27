@@ -86,8 +86,8 @@ export function InGame(){
 
     function updateBatteryPosition(){
         const newPosition = {
-            x: Math.random() * gameCanva.width - heroSize/5,
-            y: Math.random() * gameCanva.height - heroSize/2
+            x: Math.random() * (gameCanva.width * 0.8 + heroSize/2),
+            y: Math.random() * (gameCanva.height * 0.8 + heroSize/2)
         }
         return newPosition
     }
