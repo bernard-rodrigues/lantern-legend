@@ -1,3 +1,5 @@
+import { useOptions } from "../contexts/GameOptions"
+
 interface HeroProps{
     position: {
         x: number,
@@ -8,7 +10,10 @@ interface HeroProps{
     charge: number
 }
 
+
 export function Hero(props: HeroProps){
+    const {lanternColor} = useOptions()
+    
     return(
         <div 
             className="absolute bg-blue-400" 
@@ -23,8 +28,20 @@ export function Hero(props: HeroProps){
             } 
         >
             <div 
-                className="absolute left-1/2 -top-[100vw] -translate-x-1/2 w-0 h-0 border-x-transparent border-t-[100vw] border-t-white"
-                style={{borderLeft: `${(props.charge/100)*30}vw solid transparent`, borderRight: `${(props.charge/100)*30}vw solid transparent`}}    
+                className="absolute left-1/2 -top-[100vw] -translate-x-1/2 w-0 h-0"
+                style={
+                    {
+                        borderTop: `100vw solid ${
+                            lanternColor == 0 ? 'white' : 
+                            lanternColor == 1 ? 'yellow' :
+                            lanternColor == 2 ? '#ffcccc' :
+                            lanternColor == 3 ? '#ccccff' :
+                            '#ccffcc'
+                        }`,
+                        borderLeft: `${(props.charge/100)*30}vw solid transparent`, 
+                        borderRight: `${(props.charge/100)*30}vw solid transparent`
+                    }
+                }    
             />
         </div>
     )

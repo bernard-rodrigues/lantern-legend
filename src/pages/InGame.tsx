@@ -4,6 +4,7 @@ import { Battery } from "../components/Battery";
 import { GameBar } from "../components/GameBar"
 import { Hero } from "../components/Hero"
 import { Monster } from "../components/Monster"
+import { useOptions } from "../contexts/GameOptions";
 import { controlsKeyUp, controlsKeyDown, PossibleKeys, controlsStartUp } from "../utils/controls";
 
 interface Coordinates{
@@ -11,31 +12,30 @@ interface Coordinates{
     y: number
 }
 
-interface InGameProps{
-    difficulty: number,
-    lanternColor: number,
-    musicVolume: number,
-    vfxVolume: number
-}
-
 export function InGame(){
+    const {
+        difficulty,
+        best,
+        updateBestScore
+    } = useOptions()
+
     const [windowSize, setWindowSize] = useState(getWindowSize());
     const SAFETY_MARGIN = 3;
     const HERO_STEP = 1;
-    const MONSTER_STEP = 0.5
+    const MONSTER_STEP = 0.25 * (1 + difficulty)
+    
     
     const [gameTime, setGameTime] = useState(0)
 
-    const [flashes, setFlashes] = useState(0);
+    const [flashes, setFlashes] = useState(5 - difficulty);
     const [score, setScore] = useState(0);
-    const [best, setBest] = useState(0);
     const [charge, setCharge] = useState(100);
-    const [chargeReducingFactor, setChargeReducingFactor] = useState(0.005)
+    const [chargeReducingFactor, setChargeReducingFactor] = useState(0.005 * difficulty)
     const [canLevelUp, setCanLevelUp] = useState(false)
 
     const [heroPosition, setHeroPosition] = useState<Coordinates>({x: 0, y: 0});
     const [heroAngle, setHeroAngle] = useState(0)
-    const [moving, setMoving] = useState(false);
+    const [monsterCanMove, setMonsterCanMove] = useState(true);
     const [controlling, setControlling] = useState<PossibleKeys>(controlsStartUp);
     const [gameCanva, setGameCanva] = useState(adjustScreen())
     const [monsterPosition, setMonsterPosition] = useState<Coordinates>({x: gameCanva.width - gameCanva.width*0.025, y:gameCanva.height - gameCanva.width*0.025})
@@ -43,6 +43,7 @@ export function InGame(){
     const [batteryPosition, setBatteryPosition] = useState<Coordinates>(updateBatteryPosition())
 
     const navigate = useNavigate()
+
 
     function adjustScreen(){
         if(windowSize.innerWidth/(windowSize.innerHeight - 64) == 16/9){
@@ -69,6 +70,8 @@ export function InGame(){
         checkMonsterCollission();
         checkBatteryCollision();
         if(charge <= 0){
+            updateBestScore(score, difficulty)
+            
             navigate('/gameover', {
                 state: {
                     death: 0,
@@ -87,10 +90,18 @@ export function InGame(){
         return newPosition
     }
 
+    function flashEffect(){
+
+    }
+
+    function toggleMonsterCanMove(){
+        setMonsterCanMove(currentMonsterCanMove => !currentMonsterCanMove)
+    }
+
     function moveCharacter(){
-        if(controlling.Space){
-            setMoving(false)
-            setTimeout(setMoving, 3000)
+        if(controlling.Space && monsterCanMove){
+            toggleMonsterCanMove()
+            setTimeout(toggleMonsterCanMove, 3000)
         }else if(
             (controlling.KeyA || controlling.ArrowLeft) && 
             (controlling.KeyW || controlling.ArrowUp) && 
@@ -155,38 +166,41 @@ export function InGame(){
     }
 
     function moveMonster(){
-        if(heroPosition.x < monsterPosition.x && heroPosition.y < monsterPosition.y){
-            setMonsterPosition(currentPosition => (
-                {...currentPosition, x: currentPosition.x - MONSTER_STEP/Math.sqrt(2), y: currentPosition.y - MONSTER_STEP/Math.sqrt(2)}
-            ))
-        }else if(heroPosition.x > monsterPosition.x && heroPosition.y > monsterPosition.y){
-            setMonsterPosition(currentPosition => (
-                {...currentPosition, x: currentPosition.x + MONSTER_STEP/Math.sqrt(2), y: currentPosition.y + MONSTER_STEP/Math.sqrt(2)}
-            ))
-        }else if(heroPosition.x < monsterPosition.x && heroPosition.y > monsterPosition.y){
-            setMonsterPosition(currentPosition => (
-                {...currentPosition, x: currentPosition.x - MONSTER_STEP/Math.sqrt(2), y: currentPosition.y + MONSTER_STEP/Math.sqrt(2)}
-            ))
-        }else if(heroPosition.x > monsterPosition.x && heroPosition.y < monsterPosition.y){
-            setMonsterPosition(currentPosition => (
-                {...currentPosition, x: currentPosition.x + MONSTER_STEP/Math.sqrt(2), y: currentPosition.y - MONSTER_STEP/Math.sqrt(2)}
-            ))
-        }else if(heroPosition.x < monsterPosition.x){
-            setMonsterPosition(currentPosition => (
-                {...currentPosition, x: currentPosition.x - MONSTER_STEP}
-            ))
-        }else if(heroPosition.x > monsterPosition.x){
-            setMonsterPosition(currentPosition => (
-                {...currentPosition, x: currentPosition.x + MONSTER_STEP}
-            ))
-        }else if(heroPosition.y < monsterPosition.y){
-            setMonsterPosition(currentPosition => (
-                {...currentPosition, y: currentPosition.y - MONSTER_STEP}
-            ))
-        }else if(heroPosition.y > monsterPosition.y){
-            setMonsterPosition(currentPosition => (
-                {...currentPosition, y: currentPosition.y + MONSTER_STEP}
-            ))
+        if(monsterCanMove){
+
+            if(heroPosition.x < monsterPosition.x && heroPosition.y < monsterPosition.y){
+                setMonsterPosition(currentPosition => (
+                    {...currentPosition, x: currentPosition.x - MONSTER_STEP/Math.sqrt(2), y: currentPosition.y - MONSTER_STEP/Math.sqrt(2)}
+                ))
+            }else if(heroPosition.x > monsterPosition.x && heroPosition.y > monsterPosition.y){
+                setMonsterPosition(currentPosition => (
+                    {...currentPosition, x: currentPosition.x + MONSTER_STEP/Math.sqrt(2), y: currentPosition.y + MONSTER_STEP/Math.sqrt(2)}
+                ))
+            }else if(heroPosition.x < monsterPosition.x && heroPosition.y > monsterPosition.y){
+                setMonsterPosition(currentPosition => (
+                    {...currentPosition, x: currentPosition.x - MONSTER_STEP/Math.sqrt(2), y: currentPosition.y + MONSTER_STEP/Math.sqrt(2)}
+                ))
+            }else if(heroPosition.x > monsterPosition.x && heroPosition.y < monsterPosition.y){
+                setMonsterPosition(currentPosition => (
+                    {...currentPosition, x: currentPosition.x + MONSTER_STEP/Math.sqrt(2), y: currentPosition.y - MONSTER_STEP/Math.sqrt(2)}
+                ))
+            }else if(heroPosition.x < monsterPosition.x){
+                setMonsterPosition(currentPosition => (
+                    {...currentPosition, x: currentPosition.x - MONSTER_STEP}
+                ))
+            }else if(heroPosition.x > monsterPosition.x){
+                setMonsterPosition(currentPosition => (
+                    {...currentPosition, x: currentPosition.x + MONSTER_STEP}
+                ))
+            }else if(heroPosition.y < monsterPosition.y){
+                setMonsterPosition(currentPosition => (
+                    {...currentPosition, y: currentPosition.y - MONSTER_STEP}
+                ))
+            }else if(heroPosition.y > monsterPosition.y){
+                setMonsterPosition(currentPosition => (
+                    {...currentPosition, y: currentPosition.y + MONSTER_STEP}
+                ))
+            }
         }
     }
 
@@ -198,9 +212,8 @@ export function InGame(){
         const monsterYCenter = (monsterPosition.y + heroSize)/2
 
         if(Math.sqrt(Math.pow((Math.abs(heroXCenter-monsterXCenter)), 2) + Math.pow((Math.abs(heroYCenter-monsterYCenter)), 2)) < heroSize/2){
-            if(score > best){
-                setBest(score)
-            }
+            updateBestScore(score, difficulty)
+            
             navigate('/gameover', {
                 state: {
                     score: score,
@@ -246,13 +259,11 @@ export function InGame(){
         }
 
         function handleControllingKeyDown(e: KeyboardEvent){
-            setMoving(true);
-            setControlling(controlsKeyDown(e));
+            controlsKeyDown(e) !== controlling ? setControlling(controlsKeyDown(e)) : "";
         }
 
         function handleControllingKeyUp(e: KeyboardEvent){
-            setMoving(false);
-            setControlling(controlsKeyUp(e));
+            controlsKeyUp(e) !== controlling ? setControlling(controlsKeyUp(e)) : "";
         }
 
         window.addEventListener('resize', handleWindowResize);
@@ -273,7 +284,13 @@ export function InGame(){
     
     return(
         <div className="w-screen h-screen">
-            <GameBar flashes={flashes} score={score} best={best} charge={charge} />
+            <GameBar 
+                flashes={flashes} 
+                score={score} 
+                difficulty={difficulty}
+                best={difficulty == 0 ? best.easy : difficulty == 1 ? best.normal : best.hard} 
+                charge={charge} 
+            />
             <div className="flex justify-center">
                 <div
                     className="bg-black border border-white  overflow-hidden relative" 

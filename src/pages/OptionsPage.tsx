@@ -1,45 +1,28 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { VolumeBars } from "../components/VolumeBars"
 import { ArrowLeft, ArrowRight } from 'phosphor-react'
-
-const difficulties = ['Easy', 'Normal', 'Hard']
-const lanternColors = ['White', 'Yellow', 'Baby Red', 'Baby Blue', 'Baby Green']
+import { useOptions } from "../contexts/GameOptions"
 
 export function OptionPage(){
-    const [musicVolume, setMusicVolume] = useState(3);
-    const [effectsVolume, setEffectsVolume] = useState(3);
-    const [difficulty, setDifficulty] = useState(difficulties.indexOf('Normal'));
-    const [lanternColor, setLanternColor] = useState(lanternColors.indexOf('White'));
-
     const navigate = useNavigate()
-    
-    function handleResetOptions(){
-        setMusicVolume(3)
-        setEffectsVolume(3)
-        setDifficulty(difficulties.indexOf('Normal'))
-        setLanternColor(lanternColors.indexOf('White'))
-    }
 
     function handleExit(){
         navigate('/');
     }
 
-    function toggleDifficulty(){
-        difficulty < difficulties.length - 1 ? setDifficulty(currentDifficulty => currentDifficulty + 1) : setDifficulty(0)
-    }
-
-    function toggleLanternColor(){
-        lanternColor < lanternColors.length - 1 ? setLanternColor(currentDifficulty => currentDifficulty + 1) : setLanternColor(0)
-    }
-
-    function handleMusicVolume(amount: number){
-        setMusicVolume(currentVolume => currentVolume + amount)
-    }
-
-    function handleEffectsVolume(amount: number){
-        setEffectsVolume(currentVolume => currentVolume + amount)
-    }
+    const {
+        difficulties,
+        difficulty,
+        toggleDifficulty,
+        lanternColors,
+        lanternColor,
+        toggleLanternColor,
+        musicVolume,
+        handleMusicVolume,
+        effectsVolume,
+        handleEffectsVolume,
+        handleResetOptions
+    } = useOptions()
 
     return(
         <div className="flex flex-col justify-around text-3xl p-8 border-2 border-white h-1/2 w-1/2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -57,7 +40,15 @@ export function OptionPage(){
             <div className="flex justify-between">
                 <span>Lantern Color</span>
                 <div className="flex gap-2 items-center">
-                    <span>{lanternColors[lanternColor]}</span>
+                    <span style={{
+                        color: `${
+                            lanternColor == 0 ? 'white' : 
+                            lanternColor == 1 ? 'yellow' :
+                            lanternColor == 2 ? '#ffcccc' :
+                            lanternColor == 3 ? '#ccccff' :
+                            '#ccffcc'
+                        }`,
+                    }}>{lanternColors[lanternColor]}</span>
                     
                     <button onClick={toggleLanternColor}>
                         <ArrowRight />
