@@ -1,3 +1,5 @@
+import './utils/database'
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { GameOptionsProvider } from './contexts/GameOptions';
 import { Credits } from './pages/Credits';
@@ -6,6 +8,7 @@ import { InfoScreen } from './pages/InfoScreen';
 import { InGame } from './pages/InGame';
 import { MainPage } from "./pages/MainPage";
 import { OptionPage } from "./pages/OptionsPage";
+import { Scoreboard } from './pages/Scoreboard';
 
 export function App() {
   return (
@@ -19,6 +22,7 @@ export function App() {
             <Route path="/options" element={<OptionPage />} />
             <Route path="/gameover" element={<GameOver />} />
             <Route path="/credits" element={<Credits />} />
+            <Route path="/scoreboard" element={<Scoreboard />} />
           </Routes>
         </BrowserRouter>
       </GameOptionsProvider>

@@ -21,18 +21,17 @@ export function InGame(){
 
     const [windowSize, setWindowSize] = useState(getWindowSize());
     const SAFETY_MARGIN = 3;
-    const HERO_STEP = 1;
-    const MONSTER_STEP = 0.25 * (1 + difficulty)
     
     
     const [gameTime, setGameTime] = useState(0)
-
+    
     const [flashes, setFlashes] = useState(5 - difficulty);
     const [score, setScore] = useState(0);
     const [charge, setCharge] = useState(100);
-    const [chargeReducingFactor, setChargeReducingFactor] = useState(0.005 * difficulty)
-    const [canLevelUp, setCanLevelUp] = useState(false)
-
+    const [chargeReducingFactor, setChargeReducingFactor] = useState(0.005 * difficulty);
+    const [canLevelUp, setCanLevelUp] = useState(false);
+    const [backgroundColor, setBackgroundColor] = useState('#000000')
+    
     const [heroPosition, setHeroPosition] = useState<Coordinates>({x: 0, y: 0});
     const [heroAngle, setHeroAngle] = useState(0)
     const [monsterCanMove, setMonsterCanMove] = useState(true);
@@ -40,7 +39,10 @@ export function InGame(){
     const [gameCanva, setGameCanva] = useState(adjustScreen())
     const [monsterPosition, setMonsterPosition] = useState<Coordinates>({x: gameCanva.width - gameCanva.width*0.025, y:gameCanva.height - gameCanva.width*0.025})
     const [heroSize, setHeroSize] = useState(gameCanva.width * 0.025);
-    const [batteryPosition, setBatteryPosition] = useState<Coordinates>(updateBatteryPosition())
+    const [batteryPosition, setBatteryPosition] = useState<Coordinates>(updateBatteryPosition());
+    
+    const HERO_STEP = 1 * gameCanva.width/1920;
+    const MONSTER_STEP = 0.25 * gameCanva.width/1920 * (1 + difficulty)
 
     const navigate = useNavigate()
 
@@ -84,24 +86,29 @@ export function InGame(){
 
     function updateBatteryPosition(){
         const newPosition = {
-            x: Math.random() * gameCanva.width - heroSize/10,
+            x: Math.random() * gameCanva.width - heroSize/5,
             y: Math.random() * gameCanva.height - heroSize/2
         }
         return newPosition
     }
 
-    function flashEffect(){
-
-    }
-
     function toggleMonsterCanMove(){
-        setMonsterCanMove(currentMonsterCanMove => !currentMonsterCanMove)
+        setMonsterCanMove(currentMonsterCanMove => !currentMonsterCanMove);
     }
 
     function moveCharacter(){
-        if(controlling.Space && monsterCanMove){
-            toggleMonsterCanMove()
-            setTimeout(toggleMonsterCanMove, 3000)
+        if(controlling.Space && monsterCanMove && flashes > 0){
+            toggleMonsterCanMove();
+            const flashEffect = setInterval(() => {
+                setTimeout(() => setBackgroundColor('#222222'), Math.random() * 1000);
+                setTimeout(() => setBackgroundColor('#000000'), Math.random() * 1000);
+            })
+            setFlashes(currentFlashes => currentFlashes - 1);
+            setTimeout(() => {
+                toggleMonsterCanMove();
+                clearInterval(flashEffect);
+                setTimeout(() => setBackgroundColor('#000000'), 1000);
+            }, 1500);
         }else if(
             (controlling.KeyA || controlling.ArrowLeft) && 
             (controlling.KeyW || controlling.ArrowUp) && 
@@ -288,13 +295,13 @@ export function InGame(){
                 flashes={flashes} 
                 score={score} 
                 difficulty={difficulty}
-                best={difficulty == 0 ? best.easy : difficulty == 1 ? best.normal : best.hard} 
+                best={difficulty == 0 ? best?.easy[0].score! : difficulty == 1 ? best?.normal[0].score! : best?.hard[0].score!} 
                 charge={charge} 
             />
             <div className="flex justify-center">
                 <div
-                    className="bg-black border border-white  overflow-hidden relative" 
-                    style={adjustScreen()}
+                    className="border border-white  overflow-hidden relative" 
+                    style={{...adjustScreen(), backgroundColor: backgroundColor}}
                 >
                     <Battery position={batteryPosition} size={heroSize}/>
                     <Hero position={heroPosition} angle={heroAngle} size={heroSize} charge={charge}/>

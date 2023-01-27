@@ -1,4 +1,6 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { onValue, ref, set } from "firebase/database";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { database } from "../utils/database";
 
 interface GameOptionsProps{
     difficulty: number,
@@ -13,17 +15,25 @@ interface GameOptionsProps{
     handleEffectsVolume: (amount: number) => void,
 
     updateBestScore: (score: number, difficulty: number) => void,
+    updateAdventurerName: (name: string) => void,
 
+    adventurerName: string,
     difficulties: string[],
     lanternColors: string[],
-    best: BestScore
+    best?: BestScore
+}
+
+export interface OnlineScore{
+    name: string,
+    score: number
 }
 
 interface BestScore{
-    easy: number,
-    normal: number,
-    hard: number
+    easy: OnlineScore[],
+    normal: OnlineScore[],
+    hard: OnlineScore[]
 }
+
 
 export const GameOptionsContext = createContext({} as GameOptionsProps)
 
@@ -40,8 +50,17 @@ export function GameOptionsProvider(props: AuthContextProviderProps){
     const [effectsVolume, setEffectsVolume] = useState(3);
     const [difficulty, setDifficulty] = useState(difficulties.indexOf('Normal'));
     const [lanternColor, setLanternColor] = useState(lanternColors.indexOf('White'));
+    const [adventurerName, setAdventurerName] = useState('')
 
-    const [best, setBest] = useState<BestScore>({easy: 0, normal: 0, hard: 0})
+    const [best, setBest] = useState<BestScore>()
+    
+    useEffect(() => {
+        const scoreRef = ref(database, '/');
+        onValue(scoreRef, (snapshot) => {
+            const data = snapshot.val();
+            setBest(data)
+})
+    }, [])
     
     function handleResetOptions(){
         setMusicVolume(3)
@@ -66,15 +85,58 @@ export function GameOptionsProvider(props: AuthContextProviderProps){
         setEffectsVolume(currentVolume => currentVolume + amount)
     }
 
+    function updateAdventurerName(name: string){
+        setAdventurerName(name)
+    }
+
     function updateBestScore(score: number, difficulty: number){
-        if(difficulty == 0 && score > best.easy){
-            setBest(oldBestScores => ({...oldBestScores, easy: score}))
+        let newRecordFlag = false
+        if(difficulty == 0){
+            best?.easy.forEach(register => {
+                if(score > register.score){
+                    newRecordFlag = true;
+                }
+            })
+            if(newRecordFlag){
+                best?.easy.pop()
+                best?.easy.push({
+                    name: adventurerName,
+                    score: score
+                })
+                set(ref(database, 'easy'), best?.easy);
+            }
         }
-        if(difficulty == 1 && score > best.normal){
-            setBest(oldBestScores => ({...oldBestScores, normal: score}))
+
+        if(difficulty == 1){
+            best?.normal.forEach(register => {
+                if(score > register.score){
+                    newRecordFlag = true;
+                }
+            })
+            if(newRecordFlag){
+                best?.normal.pop()
+                best?.normal.push({
+                    name: adventurerName,
+                    score: score
+                })
+                set(ref(database, 'normal'), best?.normal);
+            }
         }
-        if(difficulty == 2 && score > best.hard){
-            setBest(oldBestScores => ({...oldBestScores, hard: score}))
+
+        if(difficulty == 2){
+            best?.hard.forEach(register => {
+                if(score > register.score){
+                    newRecordFlag = true;
+                }
+            })
+            if(newRecordFlag){
+                best?.hard.pop()
+                best?.hard.push({
+                    name: adventurerName,
+                    score: score
+                })
+                set(ref(database, 'hard'), best?.hard);
+            }
         }
     }
 
@@ -94,7 +156,9 @@ export function GameOptionsProvider(props: AuthContextProviderProps){
                     handleEffectsVolume,
 
                     updateBestScore,
+                    updateAdventurerName,
 
+                    adventurerName,
                     difficulties,
                     lanternColors,
                     best
