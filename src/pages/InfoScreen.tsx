@@ -11,7 +11,9 @@ export function InfoScreen(){
     const [ temporaryAdventurerName, setTemporaryAdventurerName ] = useState('')
 
     function start(){
-        updateAdventurerName(temporaryAdventurerName)
+        if(!adventurerName){
+            updateAdventurerName(temporaryAdventurerName)
+        }
         navigate('/start')
     }
 
