@@ -6,7 +6,7 @@ import { useOptions } from "../contexts/GameOptions";
 export function InfoScreen(){
     const navigate = useNavigate()
     
-    const { adventurerName, updateAdventurerName } = useOptions()
+    const { adventurerName, updateAdventurerName, difficulties, difficulty, updateDifficulty } = useOptions()
 
     const [ temporaryAdventurerName, setTemporaryAdventurerName ] = useState('')
 
@@ -43,6 +43,20 @@ export function InfoScreen(){
                     </>
                 )
             }
+            <div className="flex justify-center gap-16">
+                <span>Select the difficulty:</span>
+                <div className="flex gap-2 items-center">
+                <button onClick={() => updateDifficulty(-1)}>
+                        <ArrowLeft />
+                    </button>
+                    
+                    <span>{difficulties[difficulty]}</span>
+                    
+                    <button onClick={() => updateDifficulty(1)}>
+                        <ArrowRight />
+                    </button>
+                </div>
+            </div>
             <p className="flex items-center gap-3">
                 Use
                 <ArrowUp size={40} className="border-white border-2 py-1 px-2"/>

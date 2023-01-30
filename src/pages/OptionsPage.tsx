@@ -11,9 +11,6 @@ export function OptionPage(){
     }
 
     const {
-        difficulties,
-        difficulty,
-        toggleDifficulty,
         lanternColors,
         lanternColor,
         toggleLanternColor,
@@ -26,17 +23,6 @@ export function OptionPage(){
 
     return(
         <div className="flex flex-col justify-around text-3xl p-8 border-2 border-white h-1/2 w-1/2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className="flex justify-between">
-                <span>Difficulty</span>
-                <div className="flex gap-2 items-center">
-                    <span>{difficulties[difficulty]}</span>
-                    
-                    <button onClick={toggleDifficulty}>
-                        <ArrowRight />
-                    </button>
-                </div>
-            </div>
-
             <div className="flex justify-between">
                 <span>Lantern Color</span>
                 <div className="flex gap-2 items-center">

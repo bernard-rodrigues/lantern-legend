@@ -9,7 +9,7 @@ interface GameOptionsProps{
     effectsVolume: number,
 
     handleResetOptions: () => void,
-    toggleDifficulty: () => void,
+    updateDifficulty: (direction: number) => void,
     toggleLanternColor: () => void,
     handleMusicVolume: (amount: number) => void,
     handleEffectsVolume: (amount: number) => void,
@@ -69,8 +69,12 @@ export function GameOptionsProvider(props: AuthContextProviderProps){
         setLanternColor(lanternColors.indexOf('White'))
     }
 
-    function toggleDifficulty(){
-        difficulty < difficulties.length - 1 ? setDifficulty(currentDifficulty => currentDifficulty + 1) : setDifficulty(0)
+    function updateDifficulty(direction: number){
+        if(direction > 0){
+            difficulty < difficulties.length - 1 ? setDifficulty(currentDifficulty => currentDifficulty + 1) : setDifficulty(0)
+        }else{
+            difficulty > 0 ? setDifficulty(currentDifficulty => currentDifficulty - 1) : setDifficulty(difficulties.length - 1)
+        }
     }
 
     function toggleLanternColor(){
@@ -150,7 +154,7 @@ export function GameOptionsProvider(props: AuthContextProviderProps){
                     effectsVolume,
 
                     handleResetOptions,
-                    toggleDifficulty,
+                    updateDifficulty,
                     toggleLanternColor,
                     handleMusicVolume,
                     handleEffectsVolume,
