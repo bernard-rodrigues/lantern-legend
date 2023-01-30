@@ -9,7 +9,9 @@ export interface PossibleKeys{
     ArrowLeft: boolean,
     ArrowRight: boolean,
 
-    Space: boolean
+    Space: boolean,
+
+    Moving: boolean
 }
 
 let keys: PossibleKeys = {
@@ -23,7 +25,9 @@ let keys: PossibleKeys = {
     ArrowLeft: false,
     ArrowRight: false,
 
-    Space: false
+    Space: false,
+
+    Moving: false
 }
 
 export function controlsStartUp(){
@@ -44,7 +48,7 @@ export function controlsKeyDown(event: KeyboardEvent){
 
         case 'Space': keys.Space = true; break;
     }
-
+    keys.Moving = true;
     return keys
 }
 
@@ -62,6 +66,6 @@ export function controlsKeyUp(event: KeyboardEvent){
 
         case 'Space': keys.Space = false; break;
     }
-
+    keys.Moving = false;
     return keys
 }

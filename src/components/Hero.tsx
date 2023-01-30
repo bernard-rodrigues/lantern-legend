@@ -1,3 +1,5 @@
+import hero from "../assets/hero_idle2.png"
+import footArms from "../assets/footArms.png"
 import { useOptions } from "../contexts/GameOptions"
 
 interface HeroProps{
@@ -7,7 +9,9 @@ interface HeroProps{
     },
     size: number,
     angle: number,
-    charge: number
+    charge: number,
+    time: number,
+    moving: boolean
 }
 
 
@@ -16,7 +20,7 @@ export function Hero(props: HeroProps){
     
     return(
         <div 
-            className="absolute bg-blue-400" 
+            className="absolute" 
             style={
                 {
                     height: props.size,
@@ -27,6 +31,9 @@ export function Hero(props: HeroProps){
                 }
             } 
         >
+            <img className="-rotate-90" src={hero} alt="Hero" />
+            <img src={footArms} alt="LeftArm" className="absolute -z-10 top-1/2 left-0 -translate-y-1/2 -rotate-90"/>
+            <img src={footArms} alt="RightArm" className="absolute -z-10 top-1/2 right-0 -translate-y-1/2 -rotate-90"/>
             <div 
                 className="absolute left-1/2 -top-[100vw] -translate-x-1/2 w-0 h-0"
                 style={
@@ -41,7 +48,7 @@ export function Hero(props: HeroProps){
                         borderLeft: `${(props.charge/100)*30}vw solid transparent`, 
                         borderRight: `${(props.charge/100)*30}vw solid transparent`
                     }
-                }    
+                }
             />
         </div>
     )

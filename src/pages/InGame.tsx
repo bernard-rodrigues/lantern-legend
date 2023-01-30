@@ -68,7 +68,7 @@ export function InGame(){
 
     function frameUpdate(){
         moveCharacter();
-        moveMonster();
+        // moveMonster();
         checkMonsterCollission();
         checkBatteryCollision();
         if(charge <= 0){
@@ -81,7 +81,7 @@ export function InGame(){
                 }
             })
         }
-        setCharge(currentCharge => currentCharge - chargeReducingFactor)
+        // setCharge(currentCharge => currentCharge - chargeReducingFactor)
     }
 
     function updateBatteryPosition(){
@@ -304,7 +304,14 @@ export function InGame(){
                     style={{...adjustScreen(), backgroundColor: backgroundColor}}
                 >
                     <Battery position={batteryPosition} size={heroSize}/>
-                    <Hero position={heroPosition} angle={heroAngle} size={heroSize} charge={charge}/>
+                    <Hero 
+                        position={heroPosition} 
+                        angle={heroAngle} 
+                        size={heroSize} 
+                        charge={charge}
+                        moving={controlling.Moving}
+                        time={gameTime}
+                    />
                     <Monster position={monsterPosition} size={heroSize} />
                 </div>
             </div>

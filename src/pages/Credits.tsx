@@ -15,6 +15,9 @@ export function Credits(){
             <h3 className="mt-6 text-4xl">Music by</h3>
             <p className="text-2xl">Bernard Rodrigues</p>
 
+            <h3 className="mt-6 text-4xl">AI Title Art by</h3>
+            <p className="text-2xl">Filipe Cardoso (MidJourney)</p>
+
             <h3 className="mt-6 text-4xl">Beta Testers</h3>
             <p className="text-2xl">Bruce Rodrigues</p>
             <p className="text-2xl">Filipe Cardoso</p>
