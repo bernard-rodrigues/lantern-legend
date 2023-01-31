@@ -43,7 +43,7 @@ export function OptionPage(){
             </div>
 
             <div className="flex justify-between">
-                <span>Music</span>
+                <span>Music (soon)</span>
                 <div className="flex gap-2 items-center">
                     <button onClick={musicVolume > 0 ? () => handleMusicVolume(-1) : () => handleMusicVolume(0)}>
                         <ArrowLeft />
@@ -58,7 +58,7 @@ export function OptionPage(){
             </div>
 
             <div className="flex justify-between">
-                <span>VFX</span>
+                <span>VFX (soon)</span>
                 <div className="flex gap-2 items-center">
                     <button onClick={effectsVolume > 0 ? () => handleEffectsVolume(-1) : () => handleEffectsVolume(0)}>
                         <ArrowLeft />

@@ -32,8 +32,30 @@ export function Hero(props: HeroProps){
             } 
         >
             <img className="-rotate-90" src={hero} alt="Hero" />
-            <img src={footArms} alt="LeftArm" className="absolute -z-10 top-1/2 left-0 -translate-y-1/2 -rotate-90"/>
-            <img src={footArms} alt="RightArm" className="absolute -z-10 top-1/2 right-0 -translate-y-1/2 -rotate-90"/>
+            <img 
+                src={footArms} 
+                alt="LeftArm" 
+                className="absolute -z-10 left-0 -translate-y-1/2 -rotate-90"
+                style={props.moving ? {top: `${40 + 10*Math.cos(props.time*0.02)}%`} : {top: '50%'}}
+            />
+            <img 
+                src={footArms} 
+                alt="RightArm" 
+                className="absolute -z-10 right-0 -translate-y-1/2 -rotate-90"
+                style={props.moving ? {top: `${40 - 10*Math.cos(props.time*0.02)}%`} : {top: '50%'}}    
+            />
+            <img 
+                src={footArms} 
+                alt="LeftFoot" 
+                className="absolute -z-10 left-1/4 -translate-y-1/2 -rotate-90"
+                style={props.moving ? {top: `${20 - 5*Math.cos(props.time*0.02)}%`} : {top: '15%'}}
+            />
+            <img 
+                src={footArms} 
+                alt="RightFoot" 
+                className="absolute -z-10 right-1/4 -translate-y-1/2 -rotate-90"
+                style={props.moving ? {top: `${20 + 5*Math.cos(props.time*0.02)}%`} : {top: '15%'}}
+            />
             <div 
                 className="absolute left-1/2 -top-[100vw] -translate-x-1/2 w-0 h-0"
                 style={
