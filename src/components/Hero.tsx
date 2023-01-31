@@ -1,4 +1,4 @@
-import hero from "../assets/hero_idle2.png"
+import hero from "../assets/hero_idle.png"
 import footArms from "../assets/footArms.png"
 import { useOptions } from "../contexts/GameOptions"
 
