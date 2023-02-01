@@ -58,7 +58,7 @@ export function OptionPage(){
             </div>
 
             <div className="flex justify-between">
-                <span>VFX (soon)</span>
+                <span>VFX</span>
                 <div className="flex gap-2 items-center">
                     <button onClick={effectsVolume > 0 ? () => handleEffectsVolume(-1) : () => handleEffectsVolume(0)}>
                         <ArrowLeft />

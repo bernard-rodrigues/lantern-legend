@@ -7,6 +7,11 @@ import { Monster } from "../components/Monster"
 import { useOptions } from "../contexts/GameOptions";
 import { controlsKeyUp, controlsKeyDown, PossibleKeys, controlsStartUp } from "../utils/controls";
 
+import useSound from "use-sound";
+import powerUp from "../assets/SFX/powerUp.mp3";
+import monsterCatch from "../assets/SFX/monsterCatch.mp3"
+import flashLight from "../assets/SFX/flashLight.mp3"
+
 interface Coordinates{
     x: number,
     y: number
@@ -16,7 +21,8 @@ export function InGame(){
     const {
         difficulty,
         best,
-        updateBestScore
+        updateBestScore,
+        effectsVolume
     } = useOptions()
 
     const [windowSize, setWindowSize] = useState(getWindowSize());
@@ -46,6 +52,9 @@ export function InGame(){
 
     const navigate = useNavigate()
 
+    const [playPowerUp] = useSound(powerUp, {volume: effectsVolume * 0.1});
+    const [playMonsterCatch] = useSound(monsterCatch, {volume: effectsVolume * 0.1});
+    const [playFlashLight] = useSound(flashLight, {volume: effectsVolume * 0.1});
 
     function adjustScreen(){
         if(windowSize.innerWidth/(windowSize.innerHeight - 64) == 16/9){
@@ -69,7 +78,7 @@ export function InGame(){
     function frameUpdate(){
         moveCharacter();
         moveMonster();
-        checkMonsterCollission();
+        checkMonsterCollision();
         checkBatteryCollision();
         if(charge <= 0){
             updateBestScore(score, difficulty)
@@ -99,6 +108,7 @@ export function InGame(){
     function moveCharacter(){
         if(controlling.Space && monsterCanMove && flashes > 0){
             toggleMonsterCanMove();
+            playFlashLight();
             const flashEffect = setInterval(() => {
                 setTimeout(() => setBackgroundColor('#222222'), Math.random() * 1000);
                 setTimeout(() => setBackgroundColor('#000000'), Math.random() * 1000);
@@ -211,7 +221,7 @@ export function InGame(){
         }
     }
 
-    function checkMonsterCollission(){
+    function checkMonsterCollision(){
         const heroXCenter = (heroPosition.x + heroSize)/2
         const heroYCenter = (heroPosition.y + heroSize)/2
 
@@ -219,7 +229,9 @@ export function InGame(){
         const monsterYCenter = (monsterPosition.y + heroSize)/2
 
         if(Math.sqrt(Math.pow((Math.abs(heroXCenter-monsterXCenter)), 2) + Math.pow((Math.abs(heroYCenter-monsterYCenter)), 2)) < heroSize/2){
-            updateBestScore(score, difficulty)
+            updateBestScore(score, difficulty);
+
+            playMonsterCatch();
             
             navigate('/gameover', {
                 state: {
@@ -240,6 +252,7 @@ export function InGame(){
             setScore(currentScore => currentScore + 1);
             setCharge(currentCharge => currentCharge + 25 > 100 ? 100 : currentCharge + 25)
             setBatteryPosition(updateBatteryPosition());
+            playPowerUp()
             if(score % 10 == 1){
                 setCanLevelUp(true)
             }

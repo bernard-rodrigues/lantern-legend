@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        VT: `'VT323', monospace`
+        VT: "'VT323', monospace"
       },
       backgroundImage: {
         titleCover: "url('/src/assets/cover.jpg')"

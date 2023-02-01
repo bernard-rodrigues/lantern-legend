@@ -1,4 +1,4 @@
-import battery from '../assets/battery.png'
+import battery from '../assets/sprites/battery.png'
 
 interface BatteryProps{
     position: {

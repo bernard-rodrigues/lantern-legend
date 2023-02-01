@@ -1,5 +1,5 @@
-import hero from "../assets/hero_idle.png"
-import footArms from "../assets/footArms.png"
+import hero from "../assets/sprites/hero_idle.png"
+import footArms from "../assets/sprites/footArms.png"
 import { useOptions } from "../contexts/GameOptions"
 
 interface HeroProps{

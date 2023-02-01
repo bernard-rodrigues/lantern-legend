@@ -1,6 +1,9 @@
 import { onValue, ref, set } from "firebase/database";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import useSound from "use-sound";
 import { database } from "../utils/database";
+
+import powerUp from "../assets/SFX/powerUp.mp3"
 
 interface GameOptionsProps{
     difficulty: number,
@@ -53,6 +56,8 @@ export function GameOptionsProvider(props: AuthContextProviderProps){
     const [adventurerName, setAdventurerName] = useState('')
 
     const [best, setBest] = useState<BestScore>()
+
+    const [playPowerUp] = useSound(powerUp, {volume: effectsVolume * 0.1})
     
     useEffect(() => {
         const scoreRef = ref(database, '/');
@@ -87,6 +92,7 @@ export function GameOptionsProvider(props: AuthContextProviderProps){
 
     function handleEffectsVolume(amount: number){
         setEffectsVolume(currentVolume => currentVolume + amount)
+        playPowerUp()
     }
 
     function updateAdventurerName(name: string){

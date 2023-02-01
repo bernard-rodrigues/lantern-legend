@@ -1,4 +1,4 @@
-import monster from '../assets/monster.png'
+import monster from '../assets/sprites/monster.png'
 
 interface MonsterProps{
     position: {
