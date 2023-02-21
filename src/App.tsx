@@ -9,10 +9,24 @@ import { InGame } from './pages/InGame';
 import { MainPage } from "./pages/MainPage";
 import { OptionPage } from "./pages/OptionsPage";
 import { Scoreboard } from './pages/Scoreboard';
+import { WarningScreen } from './pages/WarningScreen';
+import { useEffect, useState } from 'react';
 
 export function App() {
+  const [ width, setWidth ] = useState(0)
+  
+  function handleWindowResize(){
+    setWidth(innerWidth)
+  }
+  
+  useEffect(() => {
+    handleWindowResize()
+    window.addEventListener('resize', handleWindowResize)
+  }, [])
+  
   return (
     <div className="h-screen">
+      {width >= 992 ? 
       <GameOptionsProvider>
         <BrowserRouter>
           <Routes>
@@ -26,6 +40,10 @@ export function App() {
           </Routes>
         </BrowserRouter>
       </GameOptionsProvider>
+      :
+      <WarningScreen />
+      }
+      
     </div>
   )
 }
