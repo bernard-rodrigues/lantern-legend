@@ -18,6 +18,10 @@ export function App() {
   function handleWindowResize(){
     setWidth(innerWidth)
   }
+
+  function preventContextMenu(e: React.MouseEvent){
+    e.preventDefault()
+  }
   
   useEffect(() => {
     handleWindowResize()
@@ -25,7 +29,7 @@ export function App() {
   }, [])
   
   return (
-    <div className="h-screen">
+    <div className="h-screen" onContextMenu={preventContextMenu}>
       {width >= 992 ? 
       <GameOptionsProvider>
         <BrowserRouter>
