@@ -30,7 +30,7 @@ export function Credits(){
                 className="mt-5 text-2xl border-white border-2 px-12 py-2 hover:bg-white hover:text-black"
                 onClick={() => navigate('/')}
             >
-                Voltar
+                Back
             </button>
         </div>
     )
